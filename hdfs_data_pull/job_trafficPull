@@ -1,0 +1,19 @@
+rm -r Shuo/Traffic_CSVs
+hdfs dfs -rm Shuo/TargetSensors.csv
+hdfs dfs -copyFromLocal Shuo/TargetSensors.csv Shuo
+hdfs dfs -rmr Shuo/output_temp
+hdfs dfs -rmr Shuo/output
+hdfs dfs -rmr Shuo/Traffic_CSVs
+hdfs dfs -mkdir Shuo/Traffic_CSVs
+yarn jar Shuo/TrafficDataPull.jar TrafficDataPull WAVETRONIX/IOWA/2015{09,10,11,12}/*
+hdfs dfs -copyToLocal Shuo/Traffic_CSVs Shuo
+
+
+rm -r Shuo/CSVs
+hdfs dfs -rm Shuo/TargetGIDs.csv
+hdfs dfs -copyFromLocal Shuo/TargetGIDs.csv Shuo
+hdfs dfs -rmr Shuo/output_temp
+hdfs dfs -rmr Shuo/CSVs
+hdfs dfs -mkdir Shuo/CSVs
+yarn jar Shuo/WeatherDataPull.jar WeatherDataPull WEATHER/IOWA/CSV/2015/*/*
+hdfs dfs -copyToLocal Shuo/CSVs Shuo

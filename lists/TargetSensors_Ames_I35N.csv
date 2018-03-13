@@ -1,0 +1,16 @@
+Direction,coded_direction,IWZ,Latitude,Longitude,Name,SegmentLength,Group,Group_new,ID,Linear-Reference,order,ProjectName,Portable,APS,Device,GID
+NB,1,0,41.761241,-93.569112,I-35 NB @ NE 36th St,1,1t,Group 1t,226,94.8,1,Project 1t,0,0,Sensor,92054
+NB,1,0,41.791254,-93.570257,I-35 NB @ NE 126th Ave,2,1t,Group 1t,227,96.8,2,Project 1t,0,0,Sensor,94033
+NB,1,0,41.820534,-93.570718,I-35 NB @ NE 142nd Ave,2,1t,Group 1t,228,98.8,3,Project 1t,0,0,Sensor,96013
+NB,1,0,41.849689,-93.570935,I-35 NB @ NE 158th Ave,2,1t,Group 1t,229,100.8,4,Project 1t,0,0,Sensor,97333
+NB,1,0,41.877697,-93.571049,I-35 NB @ IA 210,1.55,1t,Group 1t,230,102.8,5,Project 1t,0,0,Sensor,99313
+NB,1,0,41.893732,-93.570946,I-35 NB @ Heart of Iowa Nature T,1.45,1t,Group 1t,231,103.9,6,Project 1t,0,0,Sensor,100633
+NB,1,0,41.919277,-93.570074,I-35 NB @ MP 105.7,1.95,1t,Group 1t,232,105.7,7,Project 1t,0,0,Sensor,101953
+NB,1,0,41.949573,-93.569597,I-35 NB @ MP 107.8,2.05,1t,Group 1t,233,107.8,8,Project 1t,0,0,Sensor,103934
+NB,1,0,41.979355,-93.570454,I-35 NB @ County Rd E57,1.85,1t,Group 1t,234,109.8,9,Project 1t,0,0,Sensor,105913
+NB,1,0,42.003934,-93.570946,I-35 NB S of US 30,1,1t,Group 1t,235,111.5,10,Project 1t,0,0,Sensor,107893
+NB,1,0,42.008083,-93.570977,I-35 NB @ US 30 North,0.1505,1t,Group 1t,236,111.8,11,Project 1t,0,0,Sensor,107893
+NB,1,0,42.007312,-93.570974,I-35 NB @ US 30 South,0.5,1t,Group 1t,237,111.801,12,Project 1t,0,0,Sensor,107893
+NB,1,0,42.023259,-93.571193,I-35 NB @ E Lincoln Way,0.8995,1t,Group 1t,238,112.8,13,Project 1t,0,0,Sensor,109213
+NB,1,0,42.034307,-93.570337,I-35 NB @ E 13th St,1.9,1t,Group 1t,239,113.6,14,Project 1t,0,0,Sensor,109873
+NB,1,0,42.078054,-93.566808,I-35 NB @ County Highway E29,1.5,1t,Group 1t,240,116.6,15,Project 1t,0,0,Sensor,112514
