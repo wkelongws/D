@@ -40,3 +40,8 @@ You can learn more about the work that David Ledbetter is doing at the Childrenâ
   [Interview](https://news.developer.nvidia.com/share-your-science-leveraging-deep-learning-for-personalized-drug-treatment-recommendations/)
 
   [Poster](http://on-demand.gputechconf.com/gtc/2016/posters/GTC_2016_Deep_Learning_Artificial_Intelligence_DLAI_04_P6102_WEB.pdf)
+
+
+
+website resources:
+https://stackoverflow.com/questions/42883547/what-do-you-mean-by-1d-2d-and-3d-convolutions-in-cnn

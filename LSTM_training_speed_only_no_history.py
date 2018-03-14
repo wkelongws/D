@@ -247,8 +247,8 @@ class LSTM_Short_Term_Speed_Pred_Net(nn.Module):
         self.Weather_min = Min_Max[3]
         
         if self.input_feature == 'cnn':
-            self.CNN_for_history = nn.Conv2d(1, 1, (filter_height, 1), stride=(1, 1))
             self.CNN_feature_extract = nn.Conv2d(1, 1, (filter_height, 1), stride=(1, 1))
+            self.CNN_for_history = self.CNN_feature_extract
             if self.use_volume_and_occup:
                 self.CNN_feature_extract = nn.Conv2d(1, 1, (filter_height, 3), stride=(1, 1))
             if self.use_weather:

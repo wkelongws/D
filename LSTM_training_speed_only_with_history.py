@@ -247,8 +247,8 @@ class LSTM_Short_Term_Speed_Pred_Net(nn.Module):
         self.Weather_min = Min_Max[3]
         
         if self.input_feature == 'cnn':
-            self.CNN_for_history = nn.Conv2d(1, 1, (filter_height, 1), stride=(1, 1))
             self.CNN_feature_extract = nn.Conv2d(1, 1, (filter_height, 1), stride=(1, 1))
+            self.CNN_for_history = self.CNN_feature_extract
             if self.use_volume_and_occup:
                 self.CNN_feature_extract = nn.Conv2d(1, 1, (filter_height, 3), stride=(1, 1))
             if self.use_weather:
@@ -400,8 +400,15 @@ optimizer = optim.Adam(model.parameters())
 def train_LSTM_perVehiclePrediction_Net(model,dataloaders, criterion, optimizer, dataset_sizes, num_epochs=100, weights_file_name = weights_file_name):
     since = time.time()
 #     timeSince(since)
+
+    model.load_state_dict(torch.load(weights_file_name))
+    print()
+    print('keep training from previous {}'.format(weights_file_name))
+    print()
+
+
     best_model_wts = model.state_dict()
-    best_loss = 100000
+    best_loss = 0.1612
     losses = {'train':[],'val':[]}
     
 
