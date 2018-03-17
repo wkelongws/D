@@ -408,7 +408,7 @@ def train_LSTM_perVehiclePrediction_Net(model,dataloaders, criterion, optimizer,
 
 
     best_model_wts = model.state_dict()
-    best_loss = 0.1612
+    best_loss = 0.0582
     losses = {'train':[],'val':[]}
     
 

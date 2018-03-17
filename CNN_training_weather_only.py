@@ -54,7 +54,7 @@ def timeSince(since):
     s -= m * 60
     return '%dm %ds' % (m, s)
 
-%matplotlib inline
+# %matplotlib inline
 # %matplotlib notebook
 
 # use_history = True
@@ -62,6 +62,7 @@ def timeSince(since):
 
 use_history = False
 weights_file_name = 'CNN_weather_only'
+epochs = 10000
 
 which_data = 'Data_2015_DES_I235E'
 (Traffic_2015,Weather_2015,data_2015) = pickle.load( open(which_data+"_filter_smooth.p", "rb" ) )
@@ -178,16 +179,16 @@ class CNN_Long_Term_Speed_Pred_Net(nn.Module):
         self.Weather_max = Min_Max[2]
         self.Weather_min = Min_Max[3]
         
-        self.weather_layer1_conv2d = nn.Conv2d(in_channels=9, out_channels=2, kernel_size=(1,1))
-        self.weather_layer2_conv2d = nn.Conv2d(in_channels=2, out_channels=2, kernel_size=(3,3))
-        self.weather_layer3_conv2d = nn.Conv2d(in_channels=2, out_channels=3, kernel_size=(3,3))
+        self.weather_layer1_conv2d = nn.Sequential(nn.Conv2d(in_channels=9, out_channels=2, kernel_size=(1,1)),nn.BatchNorm2d(2),nn.ReLU())
+        self.weather_layer2_conv2d = nn.Sequential(nn.Conv2d(in_channels=2, out_channels=2, kernel_size=(3,3)),nn.BatchNorm2d(2),nn.ReLU())
+        self.weather_layer3_conv2d = nn.Sequential(nn.Conv2d(in_channels=2, out_channels=3, kernel_size=(3,3)),nn.BatchNorm2d(3),nn.ReLU())
         
         self.history_layer1_conv3d = nn.Conv3d(in_channels=1, out_channels=2, kernel_size=(3,3,3))
-        self.history_layer2_conv2d = nn.Conv2d(in_channels=8, out_channels=2, kernel_size=(1,1))
-        self.history_layer3_conv2d = nn.Conv2d(in_channels=2, out_channels=3, kernel_size=(3,3))
+        self.history_layer2_conv2d = nn.Sequential(nn.BatchNorm2d(8),nn.ReLU(),nn.Conv2d(in_channels=8, out_channels=2, kernel_size=(1,1)),nn.BatchNorm2d(2),nn.ReLU())
+        self.history_layer3_conv2d = nn.Sequential(nn.Conv2d(in_channels=2, out_channels=3, kernel_size=(3,3)),nn.BatchNorm2d(3),nn.ReLU())
         
-        self.decoder_layer1_conv2d = nn.ConvTranspose2d(in_channels=3, out_channels=1, kernel_size=(3,3))
-        self.decoder_layer2_conv2d = nn.ConvTranspose2d(in_channels=1, out_channels=1, kernel_size=(3,3))
+        self.decoder_layer1_conv2d = nn.Sequential(nn.ConvTranspose2d(in_channels=3, out_channels=1, kernel_size=(3,3)),nn.BatchNorm2d(1),nn.ReLU())
+        self.decoder_layer2_conv2d = nn.Sequential(nn.ConvTranspose2d(in_channels=1, out_channels=1, kernel_size=(3,3)),nn.Sigmoid())
 
     def forward(self, input_sample, future = 0, use_gpu = True):
         
@@ -253,11 +254,10 @@ optimizer = optim.Adam(model.parameters())
 def train_CNN_LongTerm_SP_Net(model,dataloaders, criterion, optimizer, dataset_sizes, num_epochs=100, weights_file_name = weights_file_name):
     since = time.time()
 
-#     timeSince(since)
-#     model.load_state_dict(torch.load('Best_LSTM_Weights_1st'))
-#     print()
-#     print('keep training from previous "Best_LSTM_Weights_1st"')
-#     print()
+    model.load_state_dict(torch.load(weights_file_name))
+    print()
+    print('keep training from previous {}'.format(weights_file_name))
+    print()
 
 #     vanillaPlus_compromised_dict = torch.load('Best_LSTM_Weights_vanillaPlus')
 #     vanillaPlus_compromised_dict['linear_out.weight'] = torch.randn(model.state_dict()['linear_out.weight'].shape).cuda()
@@ -271,7 +271,13 @@ def train_CNN_LongTerm_SP_Net(model,dataloaders, criterion, optimizer, dataset_s
 
     best_model_wts = model.state_dict()
     best_loss = 100000
+    # a = pickle.load( open( 'loss_log_'+weights_file_name+'_.p', "rb" ) )
 
+    # best_loss = a['val'][-1]
+    best_loss = 0.3789356731977619
+    print('best val loss: {}'.format(best_loss))
+
+    losses = {'train':[],'val':[]}
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
@@ -314,6 +320,8 @@ def train_CNN_LongTerm_SP_Net(model,dataloaders, criterion, optimizer, dataset_s
 
             epoch_loss = running_loss / dataset_sizes[phase]
 
+            losses[phase].append(epoch_loss)
+
             print('{} Loss: {:.4f} total elapsed time: {}'.format(phase, epoch_loss, timeSince(since)))
 
             # deep copy the model
@@ -336,4 +344,4 @@ def train_CNN_LongTerm_SP_Net(model,dataloaders, criterion, optimizer, dataset_s
 #     print('Model saved to "Model_with_Best_CNN_Weights"')
     return model
 
-model_ft = train_CNN_LongTerm_SP_Net(model,dataloaders, criterion, optimizer, dataset_sizes, num_epochs=1000)
+model_ft = train_CNN_LongTerm_SP_Net(model,dataloaders, criterion, optimizer, dataset_sizes, num_epochs=epochs)

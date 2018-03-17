@@ -178,16 +178,16 @@ class CNN_Long_Term_Speed_Pred_Net(nn.Module):
         self.Weather_max = Min_Max[2]
         self.Weather_min = Min_Max[3]
         
-        self.weather_layer1_conv2d = nn.Conv2d(in_channels=9, out_channels=2, kernel_size=(1,1))
-        self.weather_layer2_conv2d = nn.Conv2d(in_channels=2, out_channels=2, kernel_size=(3,3))
-        self.weather_layer3_conv2d = nn.Conv2d(in_channels=2, out_channels=3, kernel_size=(3,3))
+        self.weather_layer1_conv2d = nn.Sequential(nn.Conv2d(in_channels=9, out_channels=2, kernel_size=(1,1)),nn.BatchNorm2d(2),nn.ReLU())
+        self.weather_layer2_conv2d = nn.Sequential(nn.Conv2d(in_channels=2, out_channels=2, kernel_size=(3,3)),nn.BatchNorm2d(2),nn.ReLU())
+        self.weather_layer3_conv2d = nn.Sequential(nn.Conv2d(in_channels=2, out_channels=3, kernel_size=(3,3)),nn.BatchNorm2d(3),nn.ReLU())
         
         self.history_layer1_conv3d = nn.Conv3d(in_channels=1, out_channels=2, kernel_size=(3,3,3))
-        self.history_layer2_conv2d = nn.Conv2d(in_channels=8, out_channels=2, kernel_size=(1,1))
-        self.history_layer3_conv2d = nn.Conv2d(in_channels=2, out_channels=3, kernel_size=(3,3))
+        self.history_layer2_conv2d = nn.Sequential(nn.BatchNorm2d(8),nn.ReLU(),nn.Conv2d(in_channels=8, out_channels=2, kernel_size=(1,1)),nn.BatchNorm2d(2),nn.ReLU())
+        self.history_layer3_conv2d = nn.Sequential(nn.Conv2d(in_channels=2, out_channels=3, kernel_size=(3,3)),nn.BatchNorm2d(3),nn.ReLU())
         
-        self.decoder_layer1_conv2d = nn.ConvTranspose2d(in_channels=3, out_channels=1, kernel_size=(3,3))
-        self.decoder_layer2_conv2d = nn.ConvTranspose2d(in_channels=1, out_channels=1, kernel_size=(3,3))
+        self.decoder_layer1_conv2d = nn.Sequential(nn.ConvTranspose2d(in_channels=3, out_channels=1, kernel_size=(3,3)),nn.BatchNorm2d(1),nn.ReLU())
+        self.decoder_layer2_conv2d = nn.Sequential(nn.ConvTranspose2d(in_channels=1, out_channels=1, kernel_size=(3,3)),nn.Sigmoid())
 
     def forward(self, input_sample, future = 0, use_gpu = True):
         
