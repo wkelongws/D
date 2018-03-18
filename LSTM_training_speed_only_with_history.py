@@ -392,6 +392,7 @@ criterion = nn.MSELoss()
 
 optimizer = optim.Adam(model.parameters())
 
+
 # Decay LR by a factor of 0.1 every 7 epochs
 # exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 

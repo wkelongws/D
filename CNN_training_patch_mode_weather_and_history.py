@@ -58,9 +58,9 @@ def timeSince(since):
 # %matplotlib notebook
 
 use_history = True
-weights_file_name = 'CNN_weather_and_history'
-epochs = 50000
-
+weights_file_name = 'CNN_patch_weather_and_history'
+batch_size = 1000
+epochs = 10000
 # use_history = False
 # weights_file_name = 'CNN_weather_only'
 
@@ -82,41 +82,51 @@ for i in range(Weather.shape[2]):
     Weather[:,:,i,:] = Weather_5min[:,:,int(i/5),:]
 Weather = np.delete(Weather,1,axis=3)
 
-class CNN_SpeedPrediction_database(Dataset):
-    def __init__(self, Traffic, Weather, data, transform=None, look_back = 6):
+
+class CNN_SpeedPrediction_patch_database(Dataset):
+    def __init__(self, Traffic, Weather, data, transform=None, look_back = 6, patch_length = 120, stride = 10):
+        '''
+        patch_length = 120 minutes =2 hrs
+        stride = 10 minutes 
+        '''
 
         self.Traffic = Traffic
         self.Weather = Weather
         self.data = data
         self.transform = transform
         self.look_back = look_back
+        self.patch_length = patch_length
+        self.stride = stride
+        self.rate = (1440-patch_length)/stride+1
 #         printdb_trans_1 = Dataset_NVIDIA_1(annotation_list,frame_list,transform = PerspectiveTransform(MAP_FILE, world_origin, pixel_ratio, PMAT_FILE))(self.__len__())
     def __len__(self):
-        return len(self.data)
+        return int(len(self.data)*self.rate)
 
     def __getitem__(self, idx):
         
         assert idx < self.__len__(),'idx out of dataset index boundary'
-        Traffic_today = self.Traffic[idx,:,:,:]
-        Weather_today = self.Weather[idx,:,:,:]
-        Traffic_history = 0 
-        Traffic_output = self.Traffic[idx,:,:,0]
         
-        dayofweek = self.data.loc[idx]['dayofweek']
-        data_sub = self.data[:idx]
+        day_idx = int(idx/self.rate)
+        hr_idx = int(idx%self.rate)
+        Traffic_today = self.Traffic[day_idx,:,hr_idx*self.stride:hr_idx*self.stride+self.patch_length,:]
+        Weather_today = self.Weather[day_idx,:,hr_idx*self.stride:hr_idx*self.stride+self.patch_length,:]
+        Traffic_history = 0 
+        Traffic_output = self.Traffic[day_idx,:,hr_idx*self.stride:hr_idx*self.stride+self.patch_length,0]
+        
+        dayofweek = self.data.loc[day_idx]['dayofweek']
+        data_sub = self.data[:day_idx]
         sameday_in_history = data_sub.index[data_sub['dayofweek'] == dayofweek].tolist()
         
 #         Traffic_history = np.full((self.look_back,)+self.Traffic.shape[1:], np.nan)
         
-        Traffic_history = [self.Traffic[idx,:,:,:]+np.random.randn(15,1440,3) for _ in range(self.look_back)]
+        Traffic_history = [self.Traffic[day_idx,:,hr_idx*self.stride:(hr_idx*self.stride+self.patch_length),:]+np.random.randn(15,self.patch_length,3) for _ in range(self.look_back)]
         Traffic_history = np.stack(Traffic_history,0)
-        
 #         print(len(sameday_in_history))
         sameday_in_near_history = sameday_in_history[-self.look_back:]
 #         print(len(sameday_in_near_history))
         
         for i in range(len(sameday_in_near_history)):
-            Traffic_history[self.look_back-len(sameday_in_near_history)+i] = self.Traffic[sameday_in_near_history[i]]
+            Traffic_history[self.look_back-len(sameday_in_near_history)+i] = self.Traffic[sameday_in_near_history[i],:,hr_idx*self.stride:hr_idx*self.stride+self.patch_length,:]
         
         sample = {'weather': torch.Tensor(Weather_today), 'history': torch.Tensor(Traffic_history), 'label': torch.Tensor(Traffic_output)} # 
 
@@ -132,14 +142,16 @@ data_val = data[-61:]
 data_val = data_val.reset_index()
 
 dataset = {}
-dataset['train'] = CNN_SpeedPrediction_database(Traffic[:-30], Weather[:-30], data_train)
-dataset['val'] = CNN_SpeedPrediction_database(Traffic[-61:], Weather[-61:], data_val)
+dataset['train'] = CNN_SpeedPrediction_patch_database(Traffic[:-30], Weather[:-30], data_train)
+dataset['val'] = CNN_SpeedPrediction_patch_database(Traffic[-61:], Weather[-61:], data_val)
 
-dataset_sizes = {x: len(dataset[x]) for x in ['train', 'val']}
 
-dataloaders = {x: torch.utils.data.DataLoader(dataset[x], batch_size=1000,
+
+dataloaders = {x: torch.utils.data.DataLoader(dataset[x], batch_size=batch_size,
                                              shuffle=True, num_workers=4)
               for x in ['train', 'val']}
+# dataset_sizes = {x: len(dataset[x]) for x in ['train', 'val']}
+dataset_sizes = {x: len(dataloaders[x]) for x in ['train', 'val']}
 
 '''https://github.com/wkelongws/iemgrid'''
 '''Weather: 0:tmpc 1:dwpc 2:smps 3:drct 4:vsby 5:roadtmpc 6:srad 7:snwd 8:pcpn '''
@@ -163,7 +175,6 @@ for i in range(Weather.shape[-1]):
     Weather_min.append(np.min(Weather[:,:,:,i]))
     
 Min_Max = (Traffic_max,Traffic_min,Weather_max,Weather_min)
-
 
 
 class CNN_Long_Term_Speed_Pred_Net(nn.Module):
@@ -272,10 +283,13 @@ def train_CNN_LongTerm_SP_Net(model,dataloaders, criterion, optimizer, dataset_s
 
     best_model_wts = model.state_dict()
     best_loss = 100000
-    losses = pickle.load( open( 'loss_log_'+weights_file_name+'_.p', "rb" ) )
-    best_loss = losses['val'][-1]
-    print('best val loss: {}'.format(best_loss))
-
+    losses = {'train':[],'val':[]}
+    
+#     losses = pickle.load( open( 'loss_log_'+weights_file_name+'_.p', "rb" ) )
+#     best_loss = losses['val'][-1]
+#     print('best val loss: {}'.format(best_loss))
+    
+    
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
