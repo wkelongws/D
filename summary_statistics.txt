@@ -1,0 +1,64 @@
+Weather 447 days
+
+tmpc       min:  -25.00  max:   35.60  mean:   10.28  std:   11.07
+dwpc       min:  -29.00  max:   28.00  mean:    4.82  std:   10.23
+smps       min:    0.00  max:   17.50  mean:    3.99  std:    2.63
+drct       min:    0.00  max:  360.00  mean:  183.96  std:  102.11
+vsby       min:    0.00  max:   16.09  mean:   13.90  std:    4.97
+roadtmpc   min:  -20.40  max:   51.30  mean:   13.89  std:   13.05
+srad       min:    0.00  max:  960.00  mean:  133.23  std:  216.69
+snwd       min:    0.00  max:  152.40  mean:    6.87  std:   22.31
+pcpn       min:  -36.00  max: 1315.20  mean:    0.86  std:   11.78
+
+Traffic 447 days
+
+speed      min:    3.93  max:   90.75  mean:   65.61  std:    6.07
+volume     min:    0.00  max:  165.60  mean:   27.67  std:   22.93
+occupancy  min:    0.00  max:   38.73  mean:    2.26  std:    3.25
+
+
+Weather test days
+
+417  tmpc       min:    0.00  max:   28.00  mean:   21.15  std:    6.44
+417  dwpc       min:    0.00  max:   20.00  mean:   15.98  std:    4.44
+417  smps       min:    0.00  max:    5.70  mean:    2.71  std:    1.47
+417  drct       min:    0.00  max:  300.00  mean:  150.28  std:   45.39
+417  vsby       min:    0.00  max:   16.09  mean:   14.96  std:    4.03
+417  roadtmpc   min:    0.00  max:   37.20  mean:   25.34  std:    8.37
+417  srad       min:    0.00  max:  593.40  mean:  123.32  std:  189.10
+417  snwd       min:    0.00  max:    0.00  mean:    0.00  std:    0.00
+417  pcpn       min:    0.00  max:  240.00  mean:    0.39  std:    6.55
+
+420  tmpc       min:    0.00  max:   25.60  mean:   20.15  std:    5.63
+420  dwpc       min:    0.00  max:   20.00  mean:   16.95  std:    4.64
+420  smps       min:    0.00  max:    5.10  mean:    1.98  std:    1.55
+420  drct       min:    0.00  max:  360.00  mean:  145.55  std:   62.95
+420  vsby       min:    0.00  max:   16.09  mean:   14.94  std:    4.02
+420  roadtmpc   min:    0.00  max:   31.20  mean:   22.50  std:    6.65
+420  srad       min:    0.00  max:  227.50  mean:   58.50  std:   77.70
+420  snwd       min:    0.00  max:    0.00  mean:    0.00  std:    0.00
+420  pcpn       min:    0.00  max:  823.20  mean:    2.75  std:   29.32
+
+431  tmpc       min:    0.00  max:   26.10  mean:   20.27  std:    5.82
+431  dwpc       min:    0.00  max:   20.00  mean:   14.27  std:    4.21
+431  smps       min:    0.00  max:    6.20  mean:    2.79  std:    1.45
+431  drct       min:    0.00  max:  200.00  mean:  124.09  std:   42.36
+431  vsby       min:    0.00  max:   16.09  mean:   15.02  std:    4.01
+431  roadtmpc   min:    0.00  max:   31.40  mean:   23.18  std:    6.91
+431  srad       min:    0.00  max:  628.10  mean:   93.09  std:  158.79
+431  snwd       min:    0.00  max:    0.00  mean:    0.00  std:    0.00
+431  pcpn       min:    0.00  max:   14.40  mean:    0.00  std:    0.22
+
+Traffic test days
+
+417  speed       min:   27.12  max:   85.03  mean:   65.04  std:    5.81
+417  volume      min:    0.00  max:  117.80  mean:   16.59  std:   22.77
+417  occupancy   min:    0.00  max:   34.70  mean:    1.36  std:    2.40
+
+420  speed       min:   22.38  max:   83.49  mean:   65.32  std:    6.01
+420  volume      min:    0.00  max:  121.60  mean:   28.83  std:   24.22
+420  occupancy   min:    0.00  max:   16.68  mean:    2.12  std:    1.73
+
+431  speed       min:   21.11  max:   83.90  mean:   65.05  std:    6.70
+431  volume      min:    0.00  max:  126.80  mean:   30.23  std:   24.53
+431  occupancy   min:    0.00  max:   13.30  mean:    2.14  std:    1.68

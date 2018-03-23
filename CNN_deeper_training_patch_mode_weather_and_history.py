@@ -59,7 +59,7 @@ def timeSince(since):
 
 use_history = True
 weights_file_name = 'CNN_deeper_patch_weather_and_history'
-batch_size = 1000
+batch_size = 200
 epochs = 10000
 # use_history = False
 # weights_file_name = 'CNN_weather_only'
@@ -145,12 +145,12 @@ dataset = {}
 dataset['train'] = CNN_SpeedPrediction_patch_database(Traffic[:-30], Weather[:-30], data_train)
 dataset['val'] = CNN_SpeedPrediction_patch_database(Traffic[-61:], Weather[-61:], data_val)
 
-dataset_sizes = {x: len(dataset[x]) for x in ['train', 'val']}
-
 dataloaders = {x: torch.utils.data.DataLoader(dataset[x], batch_size=batch_size,
                                              shuffle=True, num_workers=4)
               for x in ['train', 'val']}
 
+# dataset_sizes = {x: len(dataset[x]) for x in ['train', 'val']}
+dataset_sizes = {x: len(dataloaders[x]) for x in ['train', 'val']}
 '''https://github.com/wkelongws/iemgrid'''
 '''Weather: 0:tmpc 1:dwpc 2:smps 3:drct 4:vsby 5:roadtmpc 6:srad 7:snwd 8:pcpn '''
 
@@ -264,10 +264,10 @@ def train_CNN_LongTerm_SP_Net(model,dataloaders, criterion, optimizer, dataset_s
     since = time.time()
 
 #     timeSince(since)
-    # model.load_state_dict(torch.load(weights_file_name))
-    # print()
-    # print('keep training from previous {}'.format(weights_file_name))
-    # print()
+    model.load_state_dict(torch.load(weights_file_name))
+    print()
+    print('keep training from previous {}'.format(weights_file_name))
+    print()
 
 #     vanillaPlus_compromised_dict = torch.load('Best_LSTM_Weights_vanillaPlus')
 #     vanillaPlus_compromised_dict['linear_out.weight'] = torch.randn(model.state_dict()['linear_out.weight'].shape).cuda()
@@ -283,9 +283,9 @@ def train_CNN_LongTerm_SP_Net(model,dataloaders, criterion, optimizer, dataset_s
     best_loss = 100000
     losses = {'train':[],'val':[]}
     
-    # losses = pickle.load( open( 'loss_log_'+weights_file_name+'_.p', "rb" ) )
-    # best_loss = losses['val'][-1]
-    # print('best val loss: {}'.format(best_loss))
+    losses = pickle.load( open( 'loss_log_'+weights_file_name+'_.p', "rb" ) )
+    best_loss = losses['val'][-1]
+    print('best val loss: {}'.format(best_loss))
     
     
     for epoch in range(num_epochs):
